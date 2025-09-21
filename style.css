@@ -1,0 +1,214 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Baloo 2', sans-serif;
+  color: #111;
+  line-height: 1.6;
+  background: #fff;
+}
+
+/* 🔹 Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 60px;
+  background: white;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.header .logo {
+  font-size: 40px;
+  font-weight: 800;
+}
+
+.nav ul {
+  list-style: none;
+  display: flex;
+  gap: 30px;
+}
+
+.nav a {
+  text-decoration: none;
+  color: #111;
+  font-weight: 600;
+}
+
+.btn-login {
+  background: black;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 20px;
+  text-decoration: none;
+  transition: transform 0.3s ease;
+}
+
+.btn-login:hover {
+  transform: scale(1.1);
+}
+
+/* 🔹 Hero */
+.hero {
+  position: relative;
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  padding: 40px 60px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -250px;
+  transform: translateY(-50%);
+  width: 1000px;
+  height: 1000px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FFCECE, #A39FC8);
+  z-index: 1;
+}
+
+.hero-content {
+  position: relative;
+  max-width: 600px;
+  z-index: 2;
+}
+
+.hero h1 {
+  font-size: 64px;
+  font-weight: 800;
+}
+
+.hero p {
+  font-size: 20px;
+  margin: 20px 0;
+}
+
+.btn-cta {
+  display: inline-block;
+  padding: 12px 30px;
+  background: black;
+  color: white;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: transform 0.3s ease;
+}
+
+.btn-cta:hover {
+  transform: scale(1.1);
+}
+
+/* 🔹 Features */
+.features {
+  padding: 80px 60px;
+  background: #fff;
+}
+
+.features h2 {
+  font-size: 36px;
+  margin-bottom: 40px;
+  text-align: left;
+  font-weight: 700;
+}
+
+.features-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  max-width: 900px;   /* kontrola szerokości całości */
+  margin: 0;
+  padding-left: 0; /* lekko w lewo */
+}
+
+.feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  text-align: left;
+}
+
+.feature img {
+  width: 50px;       /* szerokość ikony */
+  height: auto;      /* proporcje */
+  flex-shrink: 0;    /* nie pozwala ikonie się rozciągać */
+}
+
+.feature p {
+  margin: 0;
+  max-width: 700px;  /* czytelne linie tekstu */
+}
+
+
+/* 🔹 CTA Final */
+.cta-final {
+  padding: 80px 60px;
+  text-align: left;
+  background: #f8f8f8;
+}
+
+.cta-final h2 {
+  font-size: 48px;
+  font-weight: 800;
+  margin-bottom: 20px;
+}
+
+.cta-final p {
+  font-size: 20px;
+  margin-bottom: 30px;
+}
+
+.app-promo {
+  margin-top: 50px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: leftr;
+  gap: 40px;
+  align-items: left;
+}
+
+.phone-img {
+  max-width: 250px;
+  height: auto;
+  display: block;
+}
+
+.app-text {
+  max-width: 300px;
+  text-align: left;
+}
+
+.app-text h3 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.google-play {
+  max-width: 180px;
+  height: auto;
+  transition: transform 0.3s ease;
+}
+
+.google-play:hover {
+  transform: scale(1.1);
+}
+
+/* 🔹 Footer */
+.footer {
+  background: #111;
+  color: #eee;
+  text-align: center;
+  padding: 20px;
+}
+

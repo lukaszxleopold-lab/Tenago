@@ -3,30 +3,34 @@ import type { NextRequest } from "next/server";
 import { createMiddlewareClient } from "@supabase/auth-helpers-nextjs";
 
 export async function middleware(req: NextRequest) {
+  console.log("🚀 Middleware działa! PATH:", req.nextUrl.pathname);
+
   const res = NextResponse.next();
 
-  // Tworzymy klienta Supabase dla middleware
+  // klient supabase dla middleware
   const supabase = createMiddlewareClient({ req, res });
 
-  // Pobieramy aktualną sesję użytkownika
+  // sesja użytkownika
   const {
     data: { session },
   } = await supabase.auth.getSession();
 
-  const isOnDashboard = req.nextUrl.pathname.startsWith("/dashboard");
+  const pathname = req.nextUrl.pathname;
 
-  if (isOnDashboard && !session) {
-    // 🔒 Jeśli ktoś próbuje wejść na /dashboard bez logowania → przekieruj na /login
+  // jeśli user nie jest zalogowany a wchodzi na dashboard → przekieruj do login
+  if (pathname.startsWith("/dashboard") && !session) {
     const redirectUrl = req.nextUrl.clone();
     redirectUrl.pathname = "/login";
     return NextResponse.redirect(redirectUrl);
   }
 
-  // jeśli użytkownik ma sesję → wpuszczamy go normalnie
+  // jeśli user zalogowany → pozwól wejść
   return res;
 }
 
-// ✅ Middleware działa tylko na /dashboard i podstronach dashboardu
+// middleware działa tylko dla dashboardu
 export const config = {
   matcher: ["/dashboard/:path*"],
 };
+
+

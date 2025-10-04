@@ -1,27 +1,55 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabaseClient"; // ✅ dodaj import Supabase
 
 export default function Chat() {
   const [messages, setMessages] = useState<
     { role: "user" | "assistant"; content: string }[]
   >([]);
   const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false); // 🌀 stan ładowania
+  const [loading, setLoading] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null); // ✅ dodane
 
+  // ✅ Pobierz aktualnego użytkownika po załadowaniu komponentu
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data, error } = await supabase.auth.getUser();
+      if (error) console.error("Błąd pobierania użytkownika:", error);
+      if (data?.user) {
+        setUserId(data.user.id);
+        loadMessages(data.user.id); // po zalogowaniu wczytaj historię
+      }
+    };
+    fetchUser();
+  }, []);
+
+  // ✅ Funkcja wczytująca wiadomości z bazy Supabase
+  async function loadMessages(uid: string) {
+    const { data, error } = await supabase
+      .from("messages")
+      .select("role, content")
+      .eq("user_id", uid)
+      .order("created_at", { ascending: true });
+
+    if (error) console.error("Błąd ładowania wiadomości:", error);
+    if (data) setMessages(data);
+  }
+
+  // 🔹 Wysyłanie wiadomości
   const sendMessage = async () => {
-    if (!input.trim()) return;
+    if (!input.trim() || !userId) return; // ✅ dodane sprawdzenie userId
 
     const userMessage = { role: "user", content: input };
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
-    setLoading(true); // rozpoczęcie ładowania
+    setLoading(true);
 
     try {
       const res = await fetch("/api/ask-ai", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: input }),
+        body: JSON.stringify({ userId, message: input }), // ✅ dodano userId
       });
 
       const data = await res.json();
@@ -35,7 +63,7 @@ export default function Chat() {
       };
       setMessages((prev) => [...prev, errorMsg]);
     } finally {
-      setLoading(false); // zakończenie ładowania
+      setLoading(false);
     }
   };
 

@@ -43,3 +43,15 @@ next-env.d.ts
 # Environment files
 .env
 .env.local
+
+# build / cache
+.next/
+out/
+node_modules/
+
+# env / sekrety
+.env*
+!.env.example
+
+# system
+.DS_Store

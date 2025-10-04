@@ -1,15 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabaseClient"; // ✅ dodaj import Supabase
+import { supabase } from "@/lib/supabaseClient";
 
-export default function Chat() {
+interface ChatProps {
+  propertyId?: string | null;
+}
+
+export default function Chat({ propertyId }: ChatProps) {
   const [messages, setMessages] = useState<
     { role: "user" | "assistant"; content: string }[]
   >([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [userId, setUserId] = useState<string | null>(null); // ✅ dodane
+  const [userId, setUserId] = useState<string | null>(null);
 
   // ✅ Pobierz aktualnego użytkownika po załadowaniu komponentu
   useEffect(() => {
@@ -18,27 +22,31 @@ export default function Chat() {
       if (error) console.error("Błąd pobierania użytkownika:", error);
       if (data?.user) {
         setUserId(data.user.id);
-        loadMessages(data.user.id); // po zalogowaniu wczytaj historię
+        loadMessages(data.user.id);
       }
     };
     fetchUser();
-  }, []);
+  }, [propertyId]); // zależność — wczytaj nową historię po zmianie propertyId
 
-  // ✅ Funkcja wczytująca wiadomości z bazy Supabase
+  // ✅ Wczytanie historii czatu (opcjonalnie per propertyId)
   async function loadMessages(uid: string) {
-    const { data, error } = await supabase
+    const query = supabase
       .from("messages")
       .select("role, content")
       .eq("user_id", uid)
       .order("created_at", { ascending: true });
 
+    if (propertyId) query.eq("property_id", propertyId);
+
+    const { data, error } = await query;
+
     if (error) console.error("Błąd ładowania wiadomości:", error);
     if (data) setMessages(data);
   }
 
-  // 🔹 Wysyłanie wiadomości
+  // 🔹 Wysyłanie wiadomości do API
   const sendMessage = async () => {
-    if (!input.trim() || !userId) return; // ✅ dodane sprawdzenie userId
+    if (!input.trim() || !userId) return;
 
     const userMessage = { role: "user", content: input };
     setMessages((prev) => [...prev, userMessage]);
@@ -49,7 +57,11 @@ export default function Chat() {
       const res = await fetch("/api/ask-ai", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, message: input }), // ✅ dodano userId
+        body: JSON.stringify({
+          userId,
+          message: input,
+          propertyId, // ✅ kluczowe — wysyłamy ID nieruchomości
+        }),
       });
 
       const data = await res.json();
@@ -98,7 +110,7 @@ export default function Chat() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Napisz wiadomość..."
-          onKeyDown={(e) => e.key === "Enter" && sendMessage()} // Enter = Wyślij
+          onKeyDown={(e) => e.key === "Enter" && sendMessage()}
         />
         <button
           onClick={sendMessage}

@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -14,14 +18,12 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-
-    // 🔧 najważniejsze linijki
     "baseUrl": "src",
     "paths": {
-      "@/*": ["*"],
-      "@/lib/*": ["lib/*"]
+      "@/*": [
+        "*"
+      ]
     },
-
     "plugins": [
       {
         "name": "next"
@@ -34,5 +36,7 @@
     "next-env.d.ts",
     ".next/types/**/*.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }
